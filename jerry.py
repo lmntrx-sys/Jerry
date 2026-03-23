@@ -1,9 +1,10 @@
 from pathlib import Path
 import sys
-import Scanner # type: ignore
+from Scanner import Scanner
 
 hadError = False
 
+# Main method to execute the input command/script
 def main():
     """
     main method to execute the input command/script
@@ -16,10 +17,12 @@ def main():
     else:
         runPrompt()
 
+# Run the source code from a file
 def runFile(path: str):
     lines = Path(path).read_text(encoding="utf-8").splitlines()
     run(lines)
 
+# Run the source code through the scanner and print the tokens
 def run(source: str):
     scanner = Scanner(source)
     tokens = scanner.scanTokens()
@@ -29,6 +32,7 @@ def run(source: str):
     for token in tokens:
         print(token)
 
+# Entry point of the program
 def runPrompt():
     while True:
         try: 
