@@ -1,22 +1,22 @@
 from typing import List
 from TokenType import TokenType
 from Token import Token
-from jerry import error
 
 class Scanner:
-    def __init__(self):
-        self.source: str = ""
-        self.tokens: List[str] = []
+    def __init__(self, source: str, error_handler):
+        self.source: str = source
+        self.tokens: List[Token] = []
         self.start = 0
         self.current = 0
         self.line = 1
+        self.error_handler = error_handler
 
     # Initialize the scanner with the source code to be scanned
-    def scanTokens(self) -> List[str]:
+    def scanTokens(self) -> List[Token]:
         while not self.isAtEnd():
             self.start = self.current
             self.scanToken()
-        self.tokens.append("EOF")
+        self.tokens.append(Token(TokenType.EOF, "EOF", None))
         return self.tokens
     
     def advance(self) -> str:
@@ -65,7 +65,7 @@ class Scanner:
             self.addToken(TokenType.GREATER_EQUAL if self.match("=") else TokenType.GREATER)
 
         else:
-            error(self.line, "Unexpected character.")
+            self.error_handler(self.line, "Unexpected character.")
 
     def match(self, expected: str) -> bool:
         if self.isAtEnd():

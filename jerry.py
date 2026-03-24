@@ -1,6 +1,6 @@
 from pathlib import Path
 import sys
-from Scanner import Scanner
+from scanner import Scanner
 
 hadError = False
 
