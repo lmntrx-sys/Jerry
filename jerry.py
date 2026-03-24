@@ -24,7 +24,7 @@ def runFile(path: str):
 
 # Run the source code through the scanner and print the tokens
 def run(source: str):
-    scanner = Scanner(source)
+    scanner = Scanner(source, error)
     tokens = scanner.scanTokens()
     if hadError:
         sys.exit(65)

@@ -64,6 +64,14 @@ class Scanner:
         elif case == ">":
             self.addToken(TokenType.GREATER_EQUAL if self.match("=") else TokenType.GREATER)
 
+        elif case == "/":
+            if self.match("/"):
+                while self.peek() != "\n" and self.isAtEnd():
+                    self.advance()
+            else:
+                self.addToken(TokenType.SLASH)
+            
+
         else:
             self.error_handler(self.line, "Unexpected character.")
 
