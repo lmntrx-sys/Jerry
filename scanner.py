@@ -13,9 +13,11 @@ class Scanner:
 
     # Initialize the scanner with the source code to be scanned
     def scanTokens(self) -> List[Token]:
+        # Check for start
         while not self.isAtEnd():
             self.start = self.current
             self.scanToken()
+        # Add the EOF token to the end of the program
         self.tokens.append(Token(TokenType.EOF, "EOF", None))
         return self.tokens
     
@@ -81,9 +83,12 @@ class Scanner:
                 else:
                     self.error_handler(self.line, "Unexpected character.")
 
+    # Checking for the start of a string
     def string(self):
+        # Check for the quotation mark
         while self.peek() != '"' and not self.isAtEnd():
             if self.peek() == '\n':
+                # Move to the next line
                 self.line += 1
             self.advance()
 
@@ -95,7 +100,24 @@ class Scanner:
         value = self.source[self.start+1 : self.current-1]
         self.addToken(TokenType.STRING, value)
 
-            
+    # Look for numbers in our code
+    def isDigit(self, c) -> bool:
+        return "0" <= c <= "9"
+    
+    def number(self):
+        while self.isDigit(self.peek()):
+            self.advance()
+
+        if self.peek() == self.isDigit(self.peekNext()):
+            self.advance()
+
+            while self.isDigit(self.peek()):
+                self.advance()
+
+        value = float(self.source[self.start:self.current])
+        self.addToken(TokenType.NUMBER, value)
+
+
 
     def match(self, expected: str) -> bool:
         if self.isAtEnd():
