@@ -75,12 +75,16 @@ class Scanner:
 
             # Default case (Unexpected characters)
             case _:
-                self.error_handler(self.line, "Unexpected character.")
+                # Check if the character is a digit (for numbers) or an alphabetic character (for identifiers)
+                if self.isDigit(char):
+                    self.number()
+                else:
+                    self.error_handler(self.line, "Unexpected character.")
 
     def string(self):
         while self.peek() != '"' and not self.isAtEnd():
             if self.peek() == '\n':
-                line += 1
+                self.line += 1
             self.advance()
 
             if self.isAtEnd():
