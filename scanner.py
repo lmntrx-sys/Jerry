@@ -2,6 +2,25 @@ from typing import List
 from TokenType import TokenType
 from Token import Token
 
+KEYWORDS = {
+    "and":    TokenType.AND,
+    "class":  TokenType.CLASS,
+    "else":   TokenType.ELSE,
+    "false":  TokenType.FALSE,
+    "for":    TokenType.FOR,
+    "fun":    TokenType.FUN,
+    "if":     TokenType.IF,
+    "nil":    TokenType.NIL,
+    "or":     TokenType.OR,
+    "print":  TokenType.PRINT,
+    "return": TokenType.RETURN,
+    "super":  TokenType.SUPER,
+    "this":   TokenType.THIS,
+    "true":   TokenType.TRUE,
+    "var":    TokenType.VAR,
+    "while":  TokenType.WHILE,
+}
+
 class Scanner:
     def __init__(self, source: str, error_handler):
         self.source: str = source
@@ -80,8 +99,26 @@ class Scanner:
                 # Check if the character is a digit (for numbers) or an alphabetic character (for identifiers)
                 if self.isDigit(char):
                     self.number()
+                elif self.isAlpha(char):
+                    self.identifier()
                 else:
                     self.error_handler(self.line, "Unexpected character.")
+
+    # Recognizing identifiers and reserved keywords
+    def identifier(self):
+        while self.isAlphaNumeric(self.peek()):
+            self.advance()
+        text = self.addToken(TokenType.IDENTIFIER)
+        token_type = KEYWORDS.get(text, TokenType.IDENTIFIER)
+        self.addToken(token_type)
+
+    def isAlpha(self, c) -> bool:
+        return ('a'<=c<='z') or \
+                ('A'<=c<='Z')or \
+                c == '_'
+
+    def isAlphaNUmeric(self, c: str) -> bool:
+        return self.isAlpha(c) or self.isDigit(c)
 
     # Checking for the start of a string
     def string(self):
