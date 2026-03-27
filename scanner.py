@@ -137,4 +137,10 @@ class Scanner:
             return "\0"
         return self.source[self.current]
     
+    def peekNext(self):
+        # We've reached the end of the string
+        if self.current + 1>=len(self.source):
+            return "\0"
+        return self.source[self.current+1]
+    
         
