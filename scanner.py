@@ -37,7 +37,7 @@ class Scanner:
             self.start = self.current
             self.scanToken()
         # Add the EOF token to the end of the program
-        self.tokens.append(Token(TokenType.EOF, "EOF", None))
+        self.tokens.append(Token(TokenType.EOF, "EOF", None, self.line))
         return self.tokens
     
     def advance(self) -> str:
@@ -47,7 +47,7 @@ class Scanner:
 
     def addToken(self, type: TokenType, literal: object = None):
         text = self.source[self.start:self.current]
-        self.tokens.append(Token(type, text, literal))
+        self.tokens.append(Token(type, text, literal, self.line))
     
     # Recognizing lexemes and operators
     def scanToken(self):
@@ -117,7 +117,7 @@ class Scanner:
                 ('A'<=c<='Z')or \
                 c == '_'
 
-    def isAlphaNUmeric(self, c: str) -> bool:
+    def isAlphaNumeric(self, c: str) -> bool:
         return self.isAlpha(c) or self.isDigit(c)
 
     # Checking for the start of a string

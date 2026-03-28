@@ -49,4 +49,5 @@ def report(line: int, where: str, message: str):
 def error(line: int, message: str):
     report(line, "", message)
 
-    
+if __name__ == "__main__":
+    main()
