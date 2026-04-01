@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 from typing import Any
-from token_class import Token # pyright: ignore[reportMissingImports]
+from token_class import Token
 
 class Expr:
       def accept(self, visitor):
           pass
 
 @dataclass
-class Binary9Expr:
+class Binary(Expr):
    left: Any
    operator: Any
    right: Any
@@ -16,21 +16,21 @@ class Binary9Expr:
       return visitor.visit_binary_expr(self)
 
 @dataclass
-class Grouping9Expr:
+class Grouping(Expr):
    expression: Any
 
    def accept(self, visitor):
       return visitor.visit_grouping_expr(self)
 
 @dataclass
-class Literal9Expr:
+class Literal(Expr):
    value: Any
 
    def accept(self, visitor):
       return visitor.visit_literal_expr(self)
 
 @dataclass
-class Unary9Expr:
+class Unary(Expr):
    operator: Any
    right: Any
 

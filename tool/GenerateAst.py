@@ -36,7 +36,7 @@ def define_ast(output_dir: str, base_name: str, types: List[str]):
 
 def define_type(f, base_name, class_name, field_list):
     f.write("@dataclass\n")
-    f.write(f"class {class_name}9{base_name}:\n")
+    f.write(f"class {class_name}({base_name}):\n")
 
     # Write fields
     fields = field_list.split(", ")
