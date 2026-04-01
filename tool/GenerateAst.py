@@ -28,7 +28,7 @@ def define_ast(output_dir: str, base_name: str, types: List[str]):
         f.write("          pass\n\n")
 
         # The Ast Classes
-        for type_str in type:
+        for type_str in types:
             class_name = type_str.split(":")[0].strip()
             fields = type_str.split(":")[1].strip()
             define_type(f, base_name, class_name, fields)
