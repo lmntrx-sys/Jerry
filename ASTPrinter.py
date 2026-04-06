@@ -1,3 +1,5 @@
+from tool.expr import Expr
+
 class ASTPrinter:
     def __init__(self):
         pass
@@ -19,7 +21,7 @@ class ASTPrinter:
     def visitUnaryExpr(self, expr) -> str:
         return self.parenthesize(expr.operator.lexeme, expr.right)
     
-    def parenthesize(self, name: str, *exprs: Exprs) -> str:
+    def parenthesize(self, name: str, *exprs: Expr) -> str:
 
         parts = [expr.accept(self) for expr in exprs]
         return f"({name} {' '.join(parts)})"
