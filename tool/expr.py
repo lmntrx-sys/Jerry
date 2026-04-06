@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Any
-from token_class import Token
+from token_class import Token  # type: ignore
 
 class Expr:
-      def accept(self, visitor):
-          pass
+   def accept(self, visitor):
+      pass
 
 @dataclass
 class Binary(Expr):
