@@ -1,4 +1,4 @@
-from tool.expr import Expr
+from tool.expr import Expr, Literal, Binary, Token
 
 class ASTPrinter:
     def __init__(self):
@@ -25,3 +25,22 @@ class ASTPrinter:
 
         parts = [expr.accept(self) for expr in exprs]
         return f"({name} {' '.join(parts)})"
+    
+if __name__ == "__main__":
+    # Example usage:
+    # (1 + 2) * (4 - 3)
+    expression = Binary(
+        left=Binary(
+            left=Literal(1),
+            operator=Token("PLUS", "+", None, 1),
+            right=Literal(2)
+        ),
+        operator=Token("STAR", "*", None, 1),
+        right=Binary(
+            left=Literal(4),
+            operator=Token("MINUS", "-", None, 1),
+            right=Literal(3)
+        )
+    )
+    printer = ASTPrinter()
+    print(printer.printTree(expression))  # Output: (* (+ 1 2) (- 4 3))

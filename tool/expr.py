@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-from token_class import Token  # type: ignore
+from Token import Token  
 
 class Expr:
    def accept(self, visitor):
@@ -13,21 +13,21 @@ class Binary(Expr):
    right: Any
 
    def accept(self, visitor):
-      return visitor.visit_binary_expr(self)
+      return visitor.visitBinaryExpr(self)
 
 @dataclass
 class Grouping(Expr):
    expression: Any
 
    def accept(self, visitor):
-      return visitor.visit_grouping_expr(self)
+      return visitor.visitGroupingExpr(self)
 
 @dataclass
 class Literal(Expr):
    value: Any
 
    def accept(self, visitor):
-      return visitor.visit_literal_expr(self)
+      return visitor.visitLiteralExpr(self)
 
 @dataclass
 class Unary(Expr):
@@ -35,5 +35,5 @@ class Unary(Expr):
    right: Any
 
    def accept(self, visitor):
-      return visitor.visit_unary_expr(self)
+      return visitor.visitUnaryExpr(self)
 
