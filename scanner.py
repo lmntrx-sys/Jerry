@@ -32,6 +32,7 @@ class Scanner:
 
     # Initialize the scanner with the source code to be scanned
     def scanTokens(self) -> List[Token]:
+        """Scanning of code to produce a List of tokens"""
         # Check for start
         while not self.isAtEnd():
             self.start = self.current
@@ -41,16 +42,19 @@ class Scanner:
         return self.tokens
     
     def advance(self) -> str:
+        """Consume the current character and return it"""
         c = self.source[self.current]
         self.current += 1
         return c
 
     def addToken(self, type: TokenType, literal: object = None):
+        """Add a token to the list of tokens"""
         text = self.source[self.start:self.current]
         self.tokens.append(Token(type, text, literal, self.line))
     
     # Recognizing lexemes and operators
     def scanToken(self):
+        """Scan a single token from the source code, and identify its type based on hard-coded rules."""
         char = self.advance()
         
         match char:
@@ -106,6 +110,7 @@ class Scanner:
 
     # Recognizing identifiers and reserved keywords
     def identifier(self):
+        """ Recognize identifiers and reserved keywords by consuming characters until a non-alphanumeric character is encountered, and then checking if the resulting string matches any reserved keywords."""
         while self.isAlphaNumeric(self.peek()):
             self.advance()
         text = self.addToken(TokenType.IDENTIFIER)
@@ -113,15 +118,18 @@ class Scanner:
         self.addToken(token_type)
 
     def isAlpha(self, c) -> bool:
+        """Check if the character is an alphabetic character or an underscore"""
         return ('a'<=c<='z') or \
                 ('A'<=c<='Z')or \
                 c == '_'
 
     def isAlphaNumeric(self, c: str) -> bool:
+        """Check if the character is an alphabetic character, a digit, or an underscore"""
         return self.isAlpha(c) or self.isDigit(c)
 
     # Checking for the start of a string
     def string(self):
+        """Check for the start of a string and consume characters until the closing quotation mark is found"""
         # Check for the quotation mark
         while self.peek() != '"' and not self.isAtEnd():
             if self.peek() == '\n':
@@ -139,9 +147,11 @@ class Scanner:
 
     # Look for numbers in our code
     def isDigit(self, c) -> bool:
+        """Check if the character is a digit"""
         return "0" <= c <= "9"
     
     def number(self):
+        """Look for numbers in our code and consume characters until the end of the number is reached"""
         while self.isDigit(self.peek()):
             self.advance()
 
@@ -157,6 +167,7 @@ class Scanner:
 
 
     def match(self, expected: str) -> bool:
+        """Check if the next character matches the expected character, and consume it if it does"""
         if self.isAtEnd():
             return False
         if self.source[self.current] != expected:
@@ -167,14 +178,17 @@ class Scanner:
     
     # Check if the end of the source code has been reached
     def isAtEnd(self) -> bool:
+        """Check if the end of the source code has been reached"""
         return self.current >=len(self.source)
     
     def peek(self) -> str:
+        """Look at the current character without consuming it"""
         if self.isAtEnd():
             return "\0"
         return self.source[self.current]
     
     def peekNext(self):
+        """Look at the next character without consuming it"""
         # We've reached the end of the string
         if self.current + 1>=len(self.source):
             return "\0"
