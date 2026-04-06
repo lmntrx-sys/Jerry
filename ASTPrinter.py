@@ -19,5 +19,7 @@ class ASTPrinter:
     def visitUnaryExpr(self, expr) -> str:
         return self.parenthesize(expr.operator.lexeme, expr.right)
     
-    def parenthesize()
-        pass
+    def parenthesize(self, name: str, *exprs: Exprs) -> str:
+
+        parts = [expr.accept(self) for expr in exprs]
+        return f"({name} {' '.join(parts)})"
