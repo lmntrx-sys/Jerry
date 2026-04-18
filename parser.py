@@ -75,6 +75,19 @@ class Parser:
         
         return expr
     
+    def primary(self):
+        if self.match(TokenType.FALSE): return Literal(False)
+        if self.match(TokenType.TRUE): return Literal(True)
+        if self.match(TokenType.NIL): return Literal(None)
+
+        if self.match(TokenType.NUMBER, TokenType.STRING):
+            return Literal(self.previous().literal)
+        
+        if self.match(TokenType.LEFT_PAREN):
+            expr = self.expression()
+            self.consume(TokenType.RIGHT_PAREN, "Expected ')' after expression. ")
+            return Grouping(expr) 
+
     
     def match(self, *types):
         for type in types:
