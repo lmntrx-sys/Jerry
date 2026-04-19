@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 from scanner import Scanner
+from token import Token, TokenType
 
 hadError = False
 
@@ -45,6 +46,12 @@ def runPrompt():
 
 def report(line: int, where: str, message: str):
     print(f"[line {line}] Error{where}: {message}")
+
+def error(token: Token, message: str):
+    if token.type == TokenType.EOF:
+        report(token.line, " at end", message)
+    else:
+        report(token.line, f" at '{token.lexeme}'", message)
 
 def error(line: int, message: str):
     report(line, "", message)
