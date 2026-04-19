@@ -2,6 +2,7 @@ from Token import Token
 from typing import List
 from tool.expr import Expr, Literal, Binary, Grouping, Unary
 from TokenType import TokenType
+from jerry import error
 
 class Parser:
     def __init__(self):
@@ -95,6 +96,15 @@ class Parser:
                 self.advance()
                 return True
         return False
+    
+    def consume(self, type: TokenType, message: str):
+        if self.check(type):
+            return self.advance()
+        raise Exception(message)
+    
+    def error(self, token: Token, message: str):
+        error(token, message)
+        return Exception(message)
     
     def check(self, type: TokenType):
         if self.isAtEnd():
