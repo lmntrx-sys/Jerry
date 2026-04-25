@@ -8,6 +8,7 @@ class Expr:
 
 @dataclass
 class Binary(Expr):
+   """Represents a binary expression in the AST, consisting of a left operand, an operator, and a right operand."""
    left: Any
    operator: Any
    right: Any
@@ -17,6 +18,7 @@ class Binary(Expr):
 
 @dataclass
 class Grouping(Expr):
+   """Represents a grouping expression in the AST, which is used to group sub-expressions together."""
    expression: Any
 
    def accept(self, visitor):
@@ -24,6 +26,7 @@ class Grouping(Expr):
 
 @dataclass
 class Literal(Expr):
+   """Represents a literal value in the AST, such as a number, string, or boolean."""
    value: Any
 
    def accept(self, visitor):
@@ -31,6 +34,7 @@ class Literal(Expr):
 
 @dataclass
 class Unary(Expr):
+   """Represents a unary expression in the AST, consisting of an operator and a right operand."""
    operator: Any
    right: Any
 
