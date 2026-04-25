@@ -5,6 +5,11 @@ from TokenType import TokenType
 from jerry import error
 
 class Parser:
+
+    class ParseError(Exception):
+        """Custom exception for parser errors to allow for synchronizing."""
+        pass
+
     def __init__(self):
         self.tokens = []
         self.current = 0
@@ -85,6 +90,22 @@ class Parser:
             expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expected ')' after expression. ")
             return Grouping(expr) 
+        
+    def synchronize(self):
+        """Discards tokens until it finds a statement boundary."""
+        self.advance()
+
+        while not self.isAtEnd():
+            if self.previous().type == TokenType.SEMICOLON:
+                return
+            
+            match self.peek().type:
+                case (TokenType.CLASS | TokenType.FUN | TokenType.VAR | 
+                      TokenType.FOR | TokenType.IF | TokenType.WHILE | 
+                      TokenType.PRINT | TokenType.RETURN):
+                    return
+        
+        self.advance()
 
     # Error handling
     def match(self, *types):
@@ -138,3 +159,4 @@ class Parser:
         if not self.isAtEnd():
             self.current += 1
         return self.previous()
+    
