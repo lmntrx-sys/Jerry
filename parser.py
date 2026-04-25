@@ -107,6 +107,15 @@ class Parser:
         
         self.advance()
 
+
+    def parse(self):
+        statements = []
+        while not self.isAtEnd():
+            try:
+                return self.expression()
+            except self.ParseError:
+                return None
+
     # Error handling
     def match(self, *types):
         """Check if the current token matches any of the given types. If it does, consume the token and return True. Otherwise, return False."""
