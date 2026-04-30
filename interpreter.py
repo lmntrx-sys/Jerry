@@ -35,7 +35,11 @@ class Interpreter:
     
     def checkNumberOperand(self, operator, operand):
         if isinstance(operand, float): return
-        raise RuntimeError(operator, "Operand must be number.")
+        raise JLXRuntimeError(operator, "Operand must be number.")
+    
+    def checkNumberOperands(self, operator, left, right):
+        if isinstance(left, float) and isinstance(right, float): return
+        raise JLXRuntimeError(operator, "Operands must be numbers.")
 
     def visitBinaryExpr(self, node: Binary):
         """Visit the Binary node expression and return its value"""
@@ -49,31 +53,31 @@ class Interpreter:
             
             # Handling division by zero
             case Tk.SLASH:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 if right == 0:
-                    self.error(Tk.SLASH, message="division by zero")
+                    raise JLXRuntimeError(node.operator, "division by zero")
                 else:
                     return float(left) / float(right)
             case Tk.STAR:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return float(left) * float(right)
             case Tk.GREATER:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return float(left) > float(right)
             case Tk.GREATER_EQUAL:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return float(left) >= float(right)
             case Tk.LESS:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return float(left) < float(right)
             case Tk.LESS_EQUAL:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return float(left) <= float(right)
             case Tk.BANG_EQUAL:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return not self.isEqual(left, right)
             case Tk.EQUAL_EQUAL:
-                self.checkNumberOperand(node.operator, left, right)
+                self.checkNumberOperands(node.operator, left, right)
                 return self.isEqual(left, right)
             
             # We are handling a case when a user either wants to perform simple addition or concatenation
