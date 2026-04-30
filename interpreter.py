@@ -2,6 +2,7 @@ from tool.expr import Literal, Binary, Grouping, Unary, Expr
 from TokenType import TokenType as Tk
 from typing import Any
 from jerry import error
+from RuntimeError import JLXRuntimeError
 
 class Interpreter:
     def __init__(self):
@@ -25,12 +26,17 @@ class Interpreter:
 
         match node.operator.type: 
             case Tk.MINUS:
+                self.checkNumberOperand(node.operator, right)
                 return -float(right)
             case Tk.BANG:
                 return not self.isTruthy(right)
             
         return None
     
+    def checkNumberOperand(self, operator, operand):
+        if isinstance(operand, float): return
+        raise RuntimeError(operator, "Operand must be number.")
+
     def visitBinaryExpr(self, node: Binary):
         """Visit the Binary node expression and return its value"""
         # In the Node we handle the left and right side of the operation
@@ -43,23 +49,31 @@ class Interpreter:
             
             # Handling division by zero
             case Tk.SLASH:
+                self.checkNumberOperand(node.operator, left, right)
                 if right == 0:
                     self.error(Tk.SLASH, message="division by zero")
                 else:
                     return float(left) / float(right)
             case Tk.STAR:
+                self.checkNumberOperand(node.operator, left, right)
                 return float(left) * float(right)
             case Tk.GREATER:
+                self.checkNumberOperand(node.operator, left, right)
                 return float(left) > float(right)
             case Tk.GREATER_EQUAL:
+                self.checkNumberOperand(node.operator, left, right)
                 return float(left) >= float(right)
             case Tk.LESS:
+                self.checkNumberOperand(node.operator, left, right)
                 return float(left) < float(right)
             case Tk.LESS_EQUAL:
+                self.checkNumberOperand(node.operator, left, right)
                 return float(left) <= float(right)
             case Tk.BANG_EQUAL:
+                self.checkNumberOperand(node.operator, left, right)
                 return not self.isEqual(left, right)
             case Tk.EQUAL_EQUAL:
+                self.checkNumberOperand(node.operator, left, right)
                 return self.isEqual(left, right)
             
             # We are handling a case when a user either wants to perform simple addition or concatenation
@@ -70,7 +84,7 @@ class Interpreter:
                 if isinstance(left, str) and isinstance(right, str):
                     return left + right
                 
-                raise RuntimeError(f"Operands must be two numbers or two strings.")
+                raise JLXRuntimeError(f"Operands must be two numbers or two strings.")
             
         return None
     
