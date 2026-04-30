@@ -1,7 +1,7 @@
 from pathlib import Path
 import sys
 from scanner import Scanner
-from token import Token, TokenType
+from Token import Token, TokenType
 
 hadError = False
 
