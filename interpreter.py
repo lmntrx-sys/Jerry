@@ -1,6 +1,7 @@
 from tool.expr import Literal, Binary, Grouping, Unary, Expr
 from TokenType import TokenType as Tk
 from typing import Any
+from jerry import error
 
 class Interpreter:
     def __init__(self):
@@ -26,7 +27,7 @@ class Interpreter:
             case Tk.MINUS:
                 return -float(right)
             case Tk.BANG:
-                return not self.is_truthy(right)
+                return not self.isTruthy(right)
             
         return None
     
@@ -43,18 +44,37 @@ class Interpreter:
                 return float(left) / float(right)
             case Tk.STAR:
                 return float(left) * float(right)
+            case Tk.GREATER:
+                return float(left) > float(right)
+            case Tk.GREATER_EQUAL:
+                return float(left) >= float(right)
+            case Tk.LESS:
+                return float(left) < float(right)
+            case Tk.LESS_EQUAL:
+                return float(left) >= float(right)
+            case Tk.BANG_EQUAL:
+                return not self.isEqual(left, right)
+            case Tk.EQUAL_EQUAL:
+                return self.isEqual(left, right)
             
             # We are handling a case when a user either wants to perform simple addition or concatenation
+            # We also want to hadle cases where these occur: "scone" + 4 -> "scone4"
             case Tk.PLUS:
                 if isinstance(left, (float, int)) and isinstance(right, (float, int)):
                     return float(left) + float(right)
                 
                 if isinstance(left, str) and isinstance(right, str):
                     return left + right
+                
+                if isinstance(left, str) and isinstance(right, (float, int)):
+                    return left + str(right)
             
         return None
     
-    def is_truthy(self, obj: Any) -> bool:
+    def isEqual(self, left, right) -> bool:
+        return left == right
+    
+    def isTruthy(self, obj: Any) -> bool:
         """Anything that is not false or nil is true"""
         if obj is None: return False
         if isinstance(obj, bool): return obj
