@@ -82,6 +82,7 @@ class Interpreter:
             
             # We are handling a case when a user either wants to perform simple addition or concatenation
             case Tk.PLUS:
+                self.checkNumberOperands(node.operator, left, right)
                 if isinstance(left, (float, int)) and isinstance(right, (float, int)):
                     return float(left) + float(right)
                 
@@ -98,6 +99,24 @@ class Interpreter:
     def error(self, token, message):
         error(token, message)
         return Exception(message)
+    
+    def interpret(self, expr: Expr):
+        try:
+            value = self.evaluate(expr)
+            print(self.stringify(value))
+        except JLXRuntimeError as e:
+            self.error(e.tokn, e.args[0])
+
+    def stringify(self, obj: Any) -> str:
+        if obj is None:
+            return "nil"
+        
+        if isinstance(obj, float):
+            text = str(obj)
+            if text.endswith(".0"):
+                text = text[:-2]
+            return text
+        return str(obj)
     
     def isTruthy(self, obj: Any) -> bool:
         """Anything that is not false or nil is true"""
