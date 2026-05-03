@@ -1,7 +1,6 @@
 from tool.expr import Literal, Binary, Grouping, Unary, Expr
 from TokenType import TokenType as Tk
 from typing import Any
-from jerry import error
 from RuntimeError import JLXRuntimeError
 
 class Interpreter:
@@ -97,16 +96,17 @@ class Interpreter:
         return left == right
     
     def error(self, token, message):
-        error(token, message)
+        from jerry import JerryLox as jlx
+        jlx.error(token, message)
         return Exception(message)
     
-    def interpret(self, expr: Expr):
+    def interpret(self, expr: Expr, error_handler):
         try:
             value = self.evaluate(expr)
             print(self.stringify(value))
         except JLXRuntimeError as e:
-            self.error(e.tokn, e.args[0])
-
+            error_handler(e)
+            
     def stringify(self, obj: Any) -> str:
         if obj is None:
             return "nil"
