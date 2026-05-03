@@ -1,76 +1,79 @@
 from pathlib import Path
 import sys
+from typing import Final
 from scanner import Scanner
 from Token import Token, TokenType
 from RuntimeError import JLXRuntimeError
-from interpreter import Interpreter # TODO: remove this import and use the interpreter in the run function instead of just printing tokens
+from interpreter import Interpreter
 
-hadError = False
-hadRuntimeError = False
-
-# Main method to execute the input command/script
-def main():
-    """
-    main method to execute the input command/script
-    """
-    if len(sys.argv) > 2:
-        print("Usage: python jerry.py <input_command>")
-        sys.exit(64)
-    elif len(sys.argv) == 2:
-        runFile(sys.argv[1])
-    else:
-        runPrompt()
-
-# Run the source code from a file
-def runFile(path: str):
-    lines = Path(path).read_text(encoding="utf-8").splitlines()
-    run(lines)
-
-# Run the source code through the scanner and print the tokens
-def run(source: str):
-    scanner = Scanner(source, error)
-    tokens = scanner.scanTokens()
-    # start using the interpreter here to execute the tokens and handle any runtime errors
-    interpreter = Interpreter(runtimeError)
-    interpreter.interpret(tokens)
-    if hadError:
-        sys.exit(65)
+class JerryLox:
+    # It lives here so it persists across multiple calls to run()
+    _INTERPRETER: Final = Interpreter()
     
-    if hadRuntimeError:
-        sys.exit(70)
+    hadError = False
+    hadRuntimeError = False
 
-    for token in tokens:
-        print(token)
+    @classmethod
+    def main(cls):
+        if len(sys.argv) > 2:
+            print("Usage: python jerry.py <input_command>")
+            sys.exit(64)
+        elif len(sys.argv) == 2:
+            cls.runFile(sys.argv[1])
+        else:
+            cls.runPrompt()
 
-# Entry point of the program
-def runPrompt():
-    while True:
-        try: 
-            line = input("> ")
-            run(line)
-            hadError = False
-            hadRuntimeError = False
-        except EOFError:
-            break
+    @classmethod
+    def runFile(cls, path: str):
+        # We read the whole file as one string for the scanner
+        source = Path(path).read_text(encoding="utf-8")
+        cls.run(source)
+        
+        if cls.hadError: sys.exit(65)
+        if cls.hadRuntimeError: sys.exit(70)
+
+    @classmethod
+    def runPrompt(cls):
+        while True:
+            try: 
+                line = input("> ")
+                if not line: continue
+                cls.run(line)
+                cls.hadError = False # Reset so one error doesn't kill the session
+            except EOFError:
+                break
 
 
-def report(line: int, where: str, message: str):
-    print(f"[line {line}] Error{where}: {message}")
+    @classmethod
+    def run(cls, source: str):
+        scanner = Scanner(source, cls.error)
+        tokens = scanner.scanTokens()
 
-def error(token: Token, message: str):
-    if token.type == TokenType.EOF:
-        report(token.line, " at end", message)
-    else:
-        report(token.line, f" at '{token.lexeme}'", message)
+        from parser import Parser
+        parser = Parser(tokens, cls.error)
+        expression = parser.parse() 
 
-def error(line: int, message: str):
-    report(line, "", message)
+        if cls.hadError: return 
 
-def runtimeError(error: JLXRuntimeError):
-    global hadRuntimeError
-    hadRuntimeError = True
-    print(f"{error.message}\n[line {error.token.line}]")
-    sys.exit(70)
+        cls._INTERPRETER.interpret(expression, cls.runtimeError)
+
+
+    @classmethod
+    def report(cls, line: int, where: str, message: str):
+        print(f"[line {line}] Error{where}: {message}")
+        cls.hadError = True
+
+    @classmethod
+    def error(cls, token: Token, message: str):
+        if token.type == TokenType.EOF:
+            cls.report(token.line, " at end", message)
+        else:
+            cls.report(token.line, f" at '{token.lexeme}'", message)
+
+    @classmethod
+    def runtimeError(cls, error: JLXRuntimeError):
+        print(f"{error.message}\n[line {error.token.line}]")
+        cls.hadRuntimeError = True
 
 if __name__ == "__main__":
-    main()
+    JerryLox.main()

@@ -2,7 +2,7 @@ from Token import Token
 from typing import List
 from tool.expr import Expr, Literal, Binary, Grouping, Unary
 from TokenType import TokenType
-from jerry import error
+from jerry import JerryLox as jlx
 
 class Parser:
 
@@ -10,9 +10,10 @@ class Parser:
         """Custom exception for parser errors to allow for synchronizing."""
         pass
 
-    def __init__(self):
-        self.tokens = []
+    def __init__(self, tokens: List[Token], error_handler):
+        self.tokens = tokens
         self.current = 0
+        self.error_handler = error_handler
 
     def parser(self, tokens: List[Token]):
         self.tokens = tokens
@@ -20,7 +21,7 @@ class Parser:
         return self.expression()
     
     # Comparison -> Term ( ( ">" | ">=" | "<" | "<=" ) Term )*
-    def comparison(self, expr: Expr):
+    def comparison(self):
         """Parse a comparison expression and return the resulting AST node."""
         expr = self.term()
 
@@ -132,7 +133,7 @@ class Parser:
         raise Exception(message)
     
     def error(self, token: Token, message: str):
-        error(token, message)
+        self.error_handler(token, message)
         return Exception(message)
     
     def check(self, type: TokenType):
