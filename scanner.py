@@ -155,7 +155,7 @@ class Scanner:
         while self.isDigit(self.peek()):
             self.advance()
 
-        if self.peek() == self.isDigit(self.peekNext()):
+        if self.peek() == "." and self.isDigit(self.peekNext()):
             self.advance()
 
             while self.isDigit(self.peek()):
