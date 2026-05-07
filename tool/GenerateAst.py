@@ -15,6 +15,11 @@ def main():
         "Unary     : operator, right"
     ])
 
+    define_ast(output_dir, "Stmt", [
+        "Expression : expression",
+        "Print      : expression"
+    ])
+
 def define_ast(output_dir: str, base_name: str, types: List[str]):
     path = f"{output_dir}/{base_name.lower()}.py"
     with open(path, "w", encoding="utf-8") as f:
