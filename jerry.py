@@ -51,11 +51,11 @@ class JerryLox:
 
         from parser import Parser
         parser = Parser(tokens, cls.error)
-        expression = parser.parse() 
+        statements = parser.parse() 
 
         if cls.hadError: return 
 
-        cls._INTERPRETER.interpret(expression, cls.runtimeError)
+        cls._INTERPRETER.interpret(statements , cls.runtimeError)
 
 
     @classmethod

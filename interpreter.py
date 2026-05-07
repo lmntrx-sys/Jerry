@@ -1,7 +1,7 @@
 from tool.expr import Literal, Binary, Grouping, Unary, Expr
-from tool.stmt import Expression
+from tool.stmt import Expression, Stmt
 from TokenType import TokenType as Tk
-from typing import Any
+from typing import Any, List
 from RuntimeError import JLXRuntimeError
 
 class Interpreter:
@@ -18,6 +18,9 @@ class Interpreter:
     
     def evaluate(self, expr: Expr):
         return expr.accept(self)
+    
+    def evaluate(self, stmt: Stmt):
+        return stmt.accept(self)
     
     def visitExpressionStmt(self, stmt: Expression):
         self.evaluate(stmt.expression)
@@ -110,10 +113,10 @@ class Interpreter:
         jlx.error(token, message)
         return Exception(message)
     
-    def interpret(self, expr: Expr, error_handler):
+    def interpret(self, statements: List[Stmt], error_handler):
         try:
-            value = self.evaluate(expr)
-            print(self.stringify(value))
+            for statement in statements:
+                self.execute(statement)
         except JLXRuntimeError as e:
             error_handler(e)
             
