@@ -1,4 +1,5 @@
 from tool.expr import Literal, Binary, Grouping, Unary, Expr
+from tool.stmt import Expression
 from TokenType import TokenType as Tk
 from typing import Any
 from RuntimeError import JLXRuntimeError
@@ -17,6 +18,15 @@ class Interpreter:
     
     def evaluate(self, expr: Expr):
         return expr.accept(self)
+    
+    def visitExpressionStmt(self, stmt: Expression):
+        self.evaluate(stmt.expression)
+        return None
+    
+    def visitPrintStmt(self, stmt: Expression):
+        value = self.evaluate(stmt.expression)
+        print(self.stringify(value))
+        return None
     
     def visitUnaryExpr(self, node: Unary) -> Any:
         """Visit the Unary node expression and return its value"""

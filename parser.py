@@ -1,6 +1,7 @@
 from Token import Token
 from typing import List
 from tool.expr import Expr, Literal, Binary, Grouping, Unary
+from tool.stmt import Print
 from TokenType import TokenType
 from jerry import JerryLox as jlx
 
@@ -112,11 +113,9 @@ class Parser:
     def parse(self):
         statements = []
         while not self.isAtEnd():
-            try:
-                return self.expression()
-            except self.ParseError:
-                return None
-
+            statements.append(self.declaration())
+        return statements
+    
     # Error handling
     def match(self, *types):
         """Check if the current token matches any of the given types. If it does, consume the token and return True. Otherwise, return False."""
@@ -151,6 +150,22 @@ class Parser:
     def expression(self):
         """Parse an expression and return the resulting AST node."""
         return self.eqaulity()
+    
+    def Stmt(self):
+
+        if (self.match(TokenType.PRINT)):
+            return self.printStatement()
+        return self.expressionStatement()
+    
+    def printStatement(self):
+        value = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after value")
+        return Print(value)
+    
+    def expressionStatement(self):
+        expr = self.expression()
+        self.consume(TokenType.SEMICOLON, "Expect ';' after expression")
+        return Print(expr)
 
     def peek(self):
         """Return the current token without consuming it."""
