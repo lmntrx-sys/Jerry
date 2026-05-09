@@ -22,6 +22,9 @@ class Interpreter:
     def evaluate(self, stmt: Stmt):
         return stmt.accept(self)
     
+    def execute(self, stmt: Stmt):
+        return stmt.accept(self)
+    
     def visitExpressionStmt(self, stmt: Expression):
         self.evaluate(stmt.expression)
         return None
