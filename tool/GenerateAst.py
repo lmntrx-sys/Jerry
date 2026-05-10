@@ -12,12 +12,14 @@ def main():
         "Binary    : left, operator, right",
         "Grouping  : expression",
         "Literal   : value",
-        "Unary     : operator, right"
+        "Unary     : operator, right",
+        "Variable   : name",
     ])
 
     define_ast(output_dir, "Stmt", [
         "Expression : expression",
-        "Print      : expression"
+        "Print      : expression",
+        "Var        : name, initializer"
     ])
 
 def define_ast(output_dir: str, base_name: str, types: List[str]):
@@ -29,8 +31,8 @@ def define_ast(output_dir: str, base_name: str, types: List[str]):
 
         # The Base class
         f.write(f"class {base_name}:\n")
-        f.write("      def accept(self, visitor):\n")
-        f.write("          pass\n\n")
+        f.write("   def accept(self, visitor):\n")
+        f.write("       pass\n\n")
 
         # The Ast Classes
         for type_str in types:
@@ -47,8 +49,8 @@ def define_type(f, base_name, class_name, field_list):
     fields = field_list.split(", ")
     for field in fields:
         f.write(f"   {field}: Any\n")
-    f.write("\n    def accept(self, visitor):\n")
-    f.write(f"         return visitor.visit_{class_name.lower()}_{base_name.lower()}(self)\n\n")
+    f.write("\n     def accept(self, visitor):\n")
+    f.write(f"          return visitor.visit_{class_name.lower()}_{base_name.lower()}(self)\n\n")
 
 
 if __name__ == "__main__":
