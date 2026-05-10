@@ -27,7 +27,7 @@ def define_ast(output_dir: str, base_name: str, types: List[str]):
     with open(path, "w", encoding="utf-8") as f:
         f.write("from dataclasses import dataclass\n")
         f.write("from typing import Any\n")
-        f.write("from token_class import Token\n\n")
+        f.write("from token import Token\n\n")
 
         # The Base class
         f.write(f"class {base_name}:\n")
@@ -49,8 +49,8 @@ def define_type(f, base_name, class_name, field_list):
     fields = field_list.split(", ")
     for field in fields:
         f.write(f"   {field}: Any\n")
-    f.write("\n     def accept(self, visitor):\n")
-    f.write(f"          return visitor.visit_{class_name.lower()}_{base_name.lower()}(self)\n\n")
+        f.write("\n  def accept(self, visitor):\n")
+        f.write(f"      return visitor.visit_{class_name.lower()}_{base_name.lower()}(self)\n\n")
 
 
 if __name__ == "__main__":

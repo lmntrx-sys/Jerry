@@ -1,9 +1,10 @@
 from dataclasses import dataclass
 from typing import Any
+from token import Token
 
 class Expr:
-      def accept(self, visitor):
-          pass
+   def accept(self, visitor):
+       pass
 
 @dataclass
 class Binary(Expr):
@@ -35,4 +36,11 @@ class Unary(Expr):
 
    def accept(self, visitor):
       return visitor.visit_unary_expr(self)
+
+@dataclass
+class Variable(Expr):
+   name: Any
+
+   def accept(self, visitor):
+      return visitor.visit_variable_expr(self)
 
