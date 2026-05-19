@@ -1,9 +1,10 @@
 from Token import Token
 from typing import List
-from tool.expr import Expr, Literal, Binary, Grouping, Unary
-from tool.stmt import Print
+from tool.expr import Literal, Binary, Grouping, Unary
+from tool.stmt import Expression, Print
 from TokenType import TokenType
 from jerry import JerryLox as jlx
+from tool.stmt import Var
 
 class Parser:
 
@@ -111,6 +112,7 @@ class Parser:
 
 
     def parse(self):
+        """Parse the list of tokens and return a list of statements (AST nodes)."""
         statements = []
         while not self.isAtEnd():
             statements.append(self.declaration())
@@ -132,6 +134,7 @@ class Parser:
         raise Exception(message)
     
     def error(self, token: Token, message: str):
+        """Report a parsing error at the given token with the provided message."""
         self.error_handler(token, message)
         return Exception(message)
     
@@ -151,21 +154,43 @@ class Parser:
         """Parse an expression and return the resulting AST node."""
         return self.eqaulity()
     
+    def declaration(self):
+        """Parse a declaration and return the resulting AST node."""
+        try:
+            if self.match(TokenType.VAR):
+                return self.varDeclaration()
+            return self.Stmt()
+        except Exception as e:
+            self.synchronize()
+            return None
+    
     def Stmt(self):
-
+        """Parse a statement and return the resulting AST node."""
         if (self.match(TokenType.PRINT)):
             return self.printStatement()
         return self.expressionStatement()
     
     def printStatement(self):
+        """Parse a print statement and return the resulting AST node."""
         value = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' after value")
         return Print(value)
+
+    def varDeclaration(self):
+        name = self.consume(TokenType.IDENTIFIER, "Expect variable name")
+
+        initializer = None
+        if self.match(TokenType.EQUAL):
+            initializer = self.expression()
+
+        self.consume(TokenType.SEMICOLON, "Expect ';' after variable declaration")
+        return Var(name, initializer)
     
     def expressionStatement(self):
+        """Parse an expression statement and return the resulting AST node."""
         expr = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' after expression")
-        return Print(expr)
+        return Expression(expr)
 
     def peek(self):
         """Return the current token without consuming it."""
