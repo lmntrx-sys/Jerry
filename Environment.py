@@ -23,3 +23,13 @@ class Environment:
             return 
         raise JLXRuntimeError(name, f"Undefined variable '{name.lexeme}'.")
 
+    def visitVarStmt(self, stmt):
+        value = None
+        if stmt.initializer is not None:
+            value = self.interpreter.evaluate(stmt.initializer)
+        
+        self.define(stmt.name.lexeme, value)
+        return None
+    
+    def visitVariableExpr(self, expr):
+        return self.get(expr.name)
