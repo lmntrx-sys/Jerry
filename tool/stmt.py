@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any
-from token import Token
+import Token
 
 class Stmt:
    def accept(self, visitor):
@@ -11,14 +11,14 @@ class Expression(Stmt):
    expression: Any
 
    def accept(self, visitor):
-      return visitor.visit_expression_stmt(self)
+      return visitor.visitExpressionStmt(self)
 
 @dataclass
 class Print(Stmt):
    expression: Any
 
    def accept(self, visitor):
-      return visitor.visit_print_stmt(self)
+      return visitor.visitPrintStmt(self)
 
 @dataclass
 class Var(Stmt):
@@ -26,5 +26,5 @@ class Var(Stmt):
    initializer: Any
 
    def accept(self, visitor):
-      return visitor.visit_var_stmt(self)
+      return visitor.visitVarStmt(self)
 
