@@ -1,6 +1,6 @@
 from Token import Token
 from typing import List
-from tool.expr import Literal, Binary, Grouping, Unary
+from tool.expr import Literal, Binary, Grouping, Unary, Variable
 from tool.stmt import Expression, Print
 from TokenType import TokenType
 from jerry import JerryLox as jlx
@@ -93,6 +93,9 @@ class Parser:
             expr = self.expression()
             self.consume(TokenType.RIGHT_PAREN, "Expected ')' after expression. ")
             return Grouping(expr) 
+        
+        if self.match(TokenType.IDENTIFIER):
+            return Variable(self.previous())
         
     def synchronize(self):
         """Discards tokens until it finds a statement boundary."""
