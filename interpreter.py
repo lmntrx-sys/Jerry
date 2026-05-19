@@ -4,7 +4,7 @@ from TokenType import TokenType as Tk
 from typing import Any, List
 from RuntimeError import JLXRuntimeError
 
-class Interpreter(Expr.Visitor, Stmt.Visitor):
+class Interpreter():
     def __init__(self):
         pass
 

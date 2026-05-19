@@ -65,6 +65,10 @@ class JerryLox:
 
     @classmethod
     def error(cls, token: Token, message: str):
+        if isinstance(token, int):
+            cls.report(token, "", message)
+            return
+        
         if token.type == TokenType.EOF:
             cls.report(token.line, " at end", message)
         else:

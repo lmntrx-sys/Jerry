@@ -113,7 +113,7 @@ class Scanner:
         """ Recognize identifiers and reserved keywords by consuming characters until a non-alphanumeric character is encountered, and then checking if the resulting string matches any reserved keywords."""
         while self.isAlphaNumeric(self.peek()):
             self.advance()
-        text = self.addToken(TokenType.IDENTIFIER)
+        text = self.source[self.start : self.current]
         token_type = KEYWORDS.get(text, TokenType.IDENTIFIER)
         self.addToken(token_type)
 
@@ -137,11 +137,11 @@ class Scanner:
                 self.line += 1
             self.advance()
 
-            if self.isAtEnd():
-                self.error_handler(self.line, "Unterminated String")
-                return
+        if self.isAtEnd():
+            self.error_handler(self.line, "Unterminated String")
+            return
             
-            self.advance()
+        self.advance()
         value = self.source[self.start+1 : self.current-1]
         self.addToken(TokenType.STRING, value)
 
