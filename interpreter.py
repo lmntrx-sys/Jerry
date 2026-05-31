@@ -3,10 +3,12 @@ from tool.stmt import Expression, Stmt
 from TokenType import TokenType as Tk
 from typing import Any, List
 from RuntimeError import JLXRuntimeError
+from Environment import Environment
+
 
 class Interpreter():
     def __init__(self):
-        pass
+        self.environment = Environment()
 
     def visitLiteralExpr(self, node: Literal):
         """Visit the Literal node expression and return its value"""
@@ -29,10 +31,21 @@ class Interpreter():
         self.evaluate(stmt.expression)
         return None
     
+    def visitVarStmt(self, stmt: Stmt):
+        value = None
+        if stmt.initializer is not None:
+            value = self.evaluate(stmt.initializer)
+        
+        self.environment.define(stmt.name.lexeme, value)
+        return None
+    
     def visitPrintStmt(self, stmt: Expression):
         value = self.evaluate(stmt.expression)
         print(self.stringify(value))
         return None
+    
+    def visitVariableExpr(self, expr):
+        return self.environment.get(expr.name)
     
     def visitUnaryExpr(self, node: Unary) -> Any:
         """Visit the Unary node expression and return its value"""

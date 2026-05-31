@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import Any
-import Token
 
 class Stmt:
    def accept(self, visitor):
