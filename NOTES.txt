@@ -1,0 +1,4 @@
+Fixed the underlying issue with the mis placement of code in the 
+"Environment.py" instead of "Interpreter .py"
+
+The next is to handle assignment, everything is working correctly
