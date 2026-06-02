@@ -1,9 +1,11 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from Token import Token
 from RuntimeError import JLXRuntimeError
+from __future__ import annotations
 
 class Environment:
-    def __init__(self):
+    def __init__(self, enclosing: Environment = None):
+        self.enclosing: Optional[Environment] = enclosing
         self.values: Dict[str, Any] = {}
 
     def define(self, name: str, value):
