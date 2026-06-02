@@ -1,9 +1,10 @@
-from tool.expr import Literal, Binary, Grouping, Unary, Expr
+from tool.expr import Assign, Literal, Binary, Grouping, Unary, Expr
 from tool.stmt import Expression, Stmt
 from TokenType import TokenType as Tk
 from typing import Any, List
 from RuntimeError import JLXRuntimeError
 from Environment import Environment
+from tool.expr import Assign
 
 
 class Interpreter():
@@ -47,6 +48,11 @@ class Interpreter():
     def visitVariableExpr(self, expr):
         return self.environment.get(expr.name)
     
+    def visitAssignExpr(self, expr: Assign):
+        value = self.evaluate(expr.value)
+        self.environment.assign(expr.name, value)
+        return value
+    
     def visitUnaryExpr(self, node: Unary) -> Any:
         """Visit the Unary node expression and return its value"""
         # recursively evaluate the operand first (Post-order traversal)
@@ -60,6 +66,7 @@ class Interpreter():
                 return not self.isTruthy(right)
             
         return None
+    
     
     def checkNumberOperand(self, operator, operand):
         if isinstance(operand, float): return

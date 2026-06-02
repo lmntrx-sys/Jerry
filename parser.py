@@ -1,6 +1,6 @@
 from Token import Token
 from typing import List
-from tool.expr import Literal, Binary, Grouping, Unary, Variable
+from tool.expr import Assign, Literal, Binary, Grouping, Unary, Variable
 from tool.stmt import Expression, Print
 from TokenType import TokenType
 from jerry import JerryLox as jlx
@@ -155,7 +155,7 @@ class Parser:
     
     def expression(self):
         """Parse an expression and return the resulting AST node."""
-        return self.eqaulity()
+        return self.assignment()
     
     def declaration(self):
         """Parse a declaration and return the resulting AST node."""
@@ -194,6 +194,20 @@ class Parser:
         expr = self.expression()
         self.consume(TokenType.SEMICOLON, "Expect ';' after expression")
         return Expression(expr)
+    
+    def assignment(self):
+        expr = self.eqaulity()
+
+        if self.match(TokenType.EQUAL):
+            equals = self.previous()
+            value = self.assignment()
+
+            if isinstance(expr, Variable):
+                name = expr.name
+                return Assign(name, value)
+            self.error(equals, "Invalid assignment target.")
+
+        return expr
 
     def peek(self):
         """Return the current token without consuming it."""

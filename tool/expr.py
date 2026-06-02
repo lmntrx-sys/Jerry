@@ -43,4 +43,12 @@ class Variable(Expr):
 
    def accept(self, visitor):
       return visitor.visitVariableExpr(self)
+   
+@dataclass
+class Assign(Expr):
+   name: Any
+   value: Any
+
+   def accept(self, visitor):
+      return visitor.Assign(self)
 
