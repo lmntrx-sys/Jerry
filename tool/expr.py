@@ -50,5 +50,5 @@ class Assign(Expr):
    value: Any
 
    def accept(self, visitor):
-      return visitor.Assign(self)
+      return visitor.visitAssignExpr(self)
 
