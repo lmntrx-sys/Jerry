@@ -16,6 +16,9 @@ class Environment:
         """Look up a varible value by its token"""
         if name.lexeme in self.values:
             return self.values[name.lexeme]
+        
+        if self.enclosing is not None: return self.enclosing.get(name)
+
         raise JLXRuntimeError(name, f"Undefined variable '{name.lexeme}'.")
     
     def assign(self, name: Token, value: Any):
@@ -23,6 +26,11 @@ class Environment:
         if name.lexeme in self.values:
             self.values[name.lexeme] = value
             return 
+        
+        if self.enclosing is not None:
+            self.enclosing.assign(name, value)
+            return 
+        
         raise JLXRuntimeError(name, f"Undefined variable '{name.lexeme}'.")
 
     
