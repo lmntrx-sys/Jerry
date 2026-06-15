@@ -202,7 +202,7 @@ class Parser:
             statements.append(self.declaration())
 
         self.consume(TokenType.RIGHT_BRACE, "Expected '}' after block")
-        return statements
+        return Block(statements)
     
     def assignment(self):
         expr = self.eqaulity()

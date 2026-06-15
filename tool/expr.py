@@ -11,7 +11,7 @@ class Assign(Expr):
     value: Any
 
     def accept(self, visitor):
-      return visitor.visitassignexpr(self)
+      return visitor.visitAssignExpr(self)
 
 
 
@@ -22,7 +22,7 @@ class Binary(Expr):
     right: Any
 
     def accept(self, visitor):
-      return visitor.visitbinaryexpr(self)
+      return visitor.visitBinaryExpr(self)
 
 @dataclass
 class Grouping(Expr):
