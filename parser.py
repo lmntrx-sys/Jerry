@@ -1,7 +1,7 @@
 from Token import Token
 from typing import List
 from tool.expr import Assign, Literal, Binary, Grouping, Unary, Variable
-from tool.stmt import Expression, Print
+from tool.stmt import Expression, Print, Block
 from TokenType import TokenType
 from jerry import JerryLox as jlx
 from tool.stmt import Var
@@ -134,7 +134,7 @@ class Parser:
         """Consume the current token if it matches the expected type, otherwise raise an error with the provided message."""
         if self.check(type):
             return self.advance()
-        raise Exception(message)
+        raise self.error(self.peek(), message)
     
     def error(self, token: Token, message: str):
         """Report a parsing error at the given token with the provided message."""
@@ -171,7 +171,7 @@ class Parser:
         """Parse a statement and return the resulting AST node."""
         if (self.match(TokenType.PRINT)): return self.printStatement()
 
-        if self.match(TokenType.LEFT_BRACE): return self.Stmt.block()
+        if self.match(TokenType.LEFT_BRACE): return self.block()
         return self.expressionStatement()
     
     def printStatement(self):
