@@ -6,6 +6,13 @@ class Stmt:
       pass
 
 @dataclass
+class Block(Stmt):
+   statementsExpression: Any
+
+   def accept(self, visitor):
+      return visitor.visitBlockstmt(self)
+
+@dataclass
 class Expression(Stmt):
    expression: Any
 
@@ -26,4 +33,5 @@ class Var(Stmt):
 
    def accept(self, visitor):
       return visitor.visitVarStmt(self)
+
 

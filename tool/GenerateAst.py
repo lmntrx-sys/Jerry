@@ -9,7 +9,7 @@ def main():
 
     output_dir = sys.argv[1]
     define_ast(output_dir, "Expr", [
-        "Assign    : Token name, Expr value",
+        "Assign    : name, value",
         "Binary    : left, operator, right",
         "Grouping  : expression",
         "Literal   : value",
@@ -18,6 +18,7 @@ def main():
     ])
 
     define_ast(output_dir, "Stmt", [
+        "Block      : statements"
         "Expression : expression",
         "Print      : expression",
         "Var        : name, initializer"
@@ -49,9 +50,9 @@ def define_type(f, base_name, class_name, field_list):
     # Write fields
     fields = field_list.split(", ")
     for field in fields:
-        f.write(f"   {field}: Any\n")
-        f.write("\n  def accept(self, visitor):\n")
-        f.write(f"      return visitor.visit_{class_name.lower()}_{base_name.lower()}(self)\n\n")
+        f.write(f"    {field}: Any\n")
+        f.write("\n   def accept(self, visitor):\n")
+        f.write(f"        return visitor.visit{class_name.lower()}{base_name.lower()}(self)\n\n")
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 from tool.expr import Assign, Literal, Binary, Grouping, Unary, Expr
-from tool.stmt import Expression, Stmt
+from tool.stmt import Expression, Stmt, Block
 from TokenType import TokenType as Tk
 from typing import Any, List
 from RuntimeError import JLXRuntimeError
@@ -27,6 +27,19 @@ class Interpreter():
     
     def execute(self, stmt: Stmt):
         return stmt.accept(self)
+    
+    def executeBlock(self, statements: List, environment: Environment):
+        previous = self.environment()
+        try:
+            self.environment = environment
+            for stmt in statements:
+                self.execute(stmt)
+        finally:
+            self.environment = previous
+    
+    def visitBlockStmt(self, stmt: Block):
+        self.executeBlock(stmt.statements, self.environment())
+        return None
     
     def visitExpressionStmt(self, stmt: Expression):
         self.evaluate(stmt.expression)

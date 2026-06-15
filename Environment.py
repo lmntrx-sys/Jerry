@@ -1,7 +1,7 @@
+from __future__ import annotations
 from typing import Dict, Any, Optional
 from Token import Token
 from RuntimeError import JLXRuntimeError
-from __future__ import annotations
 
 class Environment:
     def __init__(self, enclosing: Environment = None):
