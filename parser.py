@@ -2,7 +2,7 @@ from Token import Token
 from typing import List
 from tool.expr import Assign, Literal, Binary, Grouping, Unary, Variable
 from tool.stmt import Expression, Print, Block, Stmt
-from TokenType import TokenType
+from TokenType import TokenType 
 from jerry import JerryLox as jlx
 from tool.stmt import Var
 

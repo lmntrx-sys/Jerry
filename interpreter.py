@@ -45,6 +45,14 @@ class Interpreter():
         self.evaluate(stmt.expression)
         return None
     
+    def visitIfStmt(self, stmt: Stmt):
+        if self.isTruthy(self.evaluate(stmt.condition)):
+            self.execute(stmt.thenBranch)
+        elif stmt.elseBranch() != None:
+            self.execute(stmt.elseBranch)
+
+        return None
+    
     def visitVarStmt(self, stmt: Stmt):
         value = None
         if stmt.initializer is not None:
