@@ -8,63 +8,52 @@ class Expr:
 
 @dataclass
 class Assign(Expr):
-    name: Any
-
-   def accept(self, visitor):
-        return visitor.visitassignexpr(self)
-
-    value: Any
-
-   def accept(self, visitor):
-        return visitor.visitassignexpr(self)
+  name: Any
+  value: Any
+  def accept(self, visitor):
+    return visitor.visitassignexpr(self)
 
 @dataclass
 class Binary(Expr):
-    left: Any
+  left: Any
+  operator: Any
+  right: Any
 
-   def accept(self, visitor):
-        return visitor.visitbinaryexpr(self)
+  def accept(self, visitor):
+    return visitor.visitbinaryexpr(self)
 
-    operator: Any
+    
 
-   def accept(self, visitor):
-        return visitor.visitbinaryexpr(self)
-
-    right: Any
-
-   def accept(self, visitor):
-        return visitor.visitbinaryexpr(self)
+  
 
 @dataclass
 class Grouping(Expr):
-    expression: Any
+  expression: Any
 
-   def accept(self, visitor):
-        return visitor.visitgroupingexpr(self)
+  def accept(self, visitor):
+    return visitor.visitgroupingexpr(self)
 
 @dataclass
 class Literal(Expr):
-    value: Any
+  value: Any
 
-   def accept(self, visitor):
-        return visitor.visitliteralexpr(self)
+  def accept(self, visitor):
+    return visitor.visitliteralexpr(self)
 
 @dataclass
 class Unary(Expr):
-    operator: Any
+  operator: Any
+  right: Any
 
-   def accept(self, visitor):
-        return visitor.visitunaryexpr(self)
+  def accept(self, visitor):
+    return visitor.visitunaryexpr(self)
 
-    right: Any
-
-   def accept(self, visitor):
-        return visitor.visitunaryexpr(self)
+    
 
 @dataclass
 class Variable(Expr):
-    name: Any
+  name: Any
 
-   def accept(self, visitor):
-        return visitor.visitvariableexpr(self)
+  def accept(self, visitor):
+    return visitor.visitvariableexpr(self)
 
