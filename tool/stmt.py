@@ -1,30 +1,35 @@
 from dataclasses import dataclass
 from typing import Any
+from token import Token
 
 class Stmt:
    def accept(self, visitor):
-      pass
+       pass
 
 @dataclass
 class Block(Stmt):
    statementsExpression: Any
 
    def accept(self, visitor):
-      return visitor.visitBlockstmt(self)
+        return visitor.visitBlockStmt(self)
 
 @dataclass
-class Expression(Stmt):
-   expression: Any
+class If(Stmt):
+   condition: Any
+   then_branch: Any
+   else_branch: Any
 
    def accept(self, visitor):
-      return visitor.visitExpressionStmt(self)
+        return visitor.visitIfStmt(self)
+
+
 
 @dataclass
 class Print(Stmt):
    expression: Any
 
    def accept(self, visitor):
-      return visitor.visitPrintStmt(self)
+        return visitor.visitPrintStmt(self)
 
 @dataclass
 class Var(Stmt):
@@ -33,5 +38,4 @@ class Var(Stmt):
 
    def accept(self, visitor):
       return visitor.visitVarStmt(self)
-
 

@@ -1,7 +1,7 @@
 from Token import Token
 from typing import List
 from tool.expr import Assign, Literal, Binary, Grouping, Unary, Variable
-from tool.stmt import Expression, Print, Block
+from tool.stmt import Expression, Print, Block, Stmt
 from TokenType import TokenType
 from jerry import JerryLox as jlx
 from tool.stmt import Var
@@ -169,10 +169,23 @@ class Parser:
     
     def Stmt(self):
         """Parse a statement and return the resulting AST node."""
+        if self.match(TokenType.IF): return self.ifStatement()
         if (self.match(TokenType.PRINT)): return self.printStatement()
 
         if self.match(TokenType.LEFT_BRACE): return self.block()
         return self.expressionStatement()
+    
+    def ifStatement(self):
+        self.consume(TokenType.LEFT_PAREN, "Expect '(' after 'if'.")
+        condition = self.expression()
+        self.consume(TokenType.RIGHT_PAREN, "Expect ')' after if condition.")
+
+        thenBranch = self.Stmt()
+        elseBranch = None
+
+        if self.match(TokenType.ELSE):
+            elseBranch = self.Stmt()
+        return Stmt.If(condition, thenBranch, elseBranch)
     
     def printStatement(self):
         """Parse a print statement and return the resulting AST node."""
