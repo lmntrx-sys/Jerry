@@ -2,54 +2,61 @@ from dataclasses import dataclass
 from typing import Any
 
 class Expr:
-   def accept(self, visitor):
-       pass
+    def accept(self, visitor):
+        pass
 
 @dataclass
 class Assign(Expr):
-  name: Any
-  value: Any
-  def accept(self, visitor):
-    return visitor.visitAssignExpr(self)
+    name: Any
+    value: Any
+
+    def accept(self, visitor):
+        return visitor.visitAssignExpr(self)
 
 @dataclass
 class Binary(Expr):
-  left: Any
-  operator: Any
-  right: Any
+    left: Any
+    operator: Any
+    right: Any
 
-  def accept(self, visitor):
-    return visitor.visitBinaryExpr(self)
-
+    def accept(self, visitor):
+        return visitor.visitBinaryExpr(self)
 
 @dataclass
 class Grouping(Expr):
-  expression: Any
+    expression: Any
 
-  def accept(self, visitor):
-    return visitor.visitGroupingExpr(self)
+    def accept(self, visitor):
+        return visitor.visitGroupingExpr(self)
 
 @dataclass
 class Literal(Expr):
-  value: Any
+    value: Any
 
-  def accept(self, visitor):
-    return visitor.visitLiteralExpr(self)
+    def accept(self, visitor):
+        return visitor.visitLiteralExpr(self)
+
+@dataclass
+class Logical(Expr):
+    left: Any
+    operator: Any
+    right: Any
+
+    def accept(self, visitor):
+        return visitor.visitLogicalExpr(self)
 
 @dataclass
 class Unary(Expr):
-  operator: Any
-  right: Any
+    operator: Any
+    right: Any
 
-  def accept(self, visitor):
-    return visitor.visitUnaryExpr(self)
-
-    
+    def accept(self, visitor):
+        return visitor.visitUnaryExpr(self)
 
 @dataclass
 class Variable(Expr):
-  name: Any
+    name: Any
 
-  def accept(self, visitor):
-    return visitor.visitVariableExpr(self)
+    def accept(self, visitor):
+        return visitor.visitVariableExpr(self)
 
