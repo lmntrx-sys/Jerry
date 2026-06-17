@@ -18,7 +18,7 @@ def main():
     ])
 
     define_ast(output_dir, "Stmt", [
-        "Block      : statements"
+        "Block      : statements",
         "Expression : expression",
         "If         : condition, then_branch, else_branch",
         "Print      : expression",
@@ -30,12 +30,11 @@ def define_ast(output_dir: str, base_name: str, types: List[str]):
     with open(path, "w", encoding="utf-8") as f:
         f.write("from dataclasses import dataclass\n")
         f.write("from typing import Any\n")
-        f.write("from token import Token\n\n")
 
         # The Base class
         f.write(f"class {base_name}:\n")
-        f.write("   def accept(self, visitor):\n")
-        f.write("       pass\n\n")
+        f.write("    def accept(self, visitor):\n")
+        f.write("        pass\n\n")
 
         # The Ast Classes
         for type_str in types:
@@ -52,8 +51,9 @@ def define_type(f, base_name, class_name, field_list):
     fields = field_list.split(", ")
     for field in fields:
         f.write(f"    {field}: Any\n")
-        f.write("\n   def accept(self, visitor):\n")
-        f.write(f"        return visitor.visit{class_name.lower()}{base_name.lower()}(self)\n\n")
+
+    f.write("\n    def accept(self, visitor):\n")
+    f.write(f"        return visitor.visit{class_name}{base_name}(self)\n\n")
 
 
 if __name__ == "__main__":
