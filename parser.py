@@ -218,7 +218,7 @@ class Parser:
         return Block(statements)
     
     def assignment(self):
-        expr = self.eqaulity()
+        expr = self.or_()
 
         if self.match(TokenType.EQUAL):
             equals = self.previous()
