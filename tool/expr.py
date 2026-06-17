@@ -10,7 +10,7 @@ class Assign(Expr):
   name: Any
   value: Any
   def accept(self, visitor):
-    return visitor.visitassignexpr(self)
+    return visitor.visitAssignExpr(self)
 
 @dataclass
 class Binary(Expr):
@@ -19,25 +19,22 @@ class Binary(Expr):
   right: Any
 
   def accept(self, visitor):
-    return visitor.visitbinaryexpr(self)
+    return visitor.visitBinaryExpr(self)
 
-    
-
-  
 
 @dataclass
 class Grouping(Expr):
   expression: Any
 
   def accept(self, visitor):
-    return visitor.visitgroupingexpr(self)
+    return visitor.visitGroupingExpr(self)
 
 @dataclass
 class Literal(Expr):
   value: Any
 
   def accept(self, visitor):
-    return visitor.visitliteralexpr(self)
+    return visitor.visitLiteralExpr(self)
 
 @dataclass
 class Unary(Expr):
@@ -45,7 +42,7 @@ class Unary(Expr):
   right: Any
 
   def accept(self, visitor):
-    return visitor.visitunaryexpr(self)
+    return visitor.visitUnaryExpr(self)
 
     
 
@@ -54,5 +51,5 @@ class Variable(Expr):
   name: Any
 
   def accept(self, visitor):
-    return visitor.visitvariableexpr(self)
+    return visitor.visitVariableExpr(self)
 
