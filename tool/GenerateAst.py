@@ -15,7 +15,7 @@ def main():
         "Literal   : value",
         "Logical   : left, operator, right",
         "Unary     : operator, right",
-        "Variable   : name",
+        "Variable  : name",
     ])
 
     define_ast(output_dir, "Stmt", [

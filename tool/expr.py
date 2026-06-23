@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 from typing import Any
-
 class Expr:
     def accept(self, visitor):
         pass
